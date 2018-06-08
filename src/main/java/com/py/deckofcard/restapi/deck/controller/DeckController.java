@@ -5,6 +5,7 @@ import com.py.deckofcard.restapi.deck.dto.CardDto;
 import com.py.deckofcard.restapi.deck.dto.DeckDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,18 +15,24 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
-    @PostMapping(value="deck/shuffle")
-    public void shuffle(){
-        deckService.shuffle();
+
+    @PostMapping(value="deck")
+    public DeckDto createDeck() {
+        return deckService.createDeck();
     }
 
-    @PostMapping(value="deck/deal")
-    public CardDto deal(){
-        return deckService.dealOneCard();
+    @PostMapping(value="deck/{id}/shuffle")
+    public void shuffle(@PathVariable("id") int id) {
+        deckService.shuffle(id);
     }
 
-    @GetMapping(value="deck")
-    public DeckDto getAllCard(){
-        return deckService.getCardsInDeck();
+    @PostMapping(value="deck/{id}/deal")
+    public CardDto deal(@PathVariable("id") int id ){
+        return deckService.dealOneCard(id);
+    }
+
+    @GetMapping(value="deck/{id}")
+    public DeckDto getAllCard(@PathVariable("id") int id ){
+        return deckService.getCardsInDeck(id);
     }
 }
