@@ -1,11 +1,15 @@
 package com.py.deckofcard.restapi.deck.bll;
 
 import com.py.deckofcard.restapi.deck.dao.DeckDao;
+import com.py.deckofcard.restapi.deck.dto.CardDto;
 import com.py.deckofcard.restapi.deck.dto.DeckDto;
 import com.py.deckofcard.restapi.deck.entity.Card;
 import com.py.deckofcard.restapi.deck.entity.enums.Suits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class DeckServiceImplementation implements DeckService {
@@ -28,10 +32,13 @@ public class DeckServiceImplementation implements DeckService {
     }
 
     @Override
-    public Card dealOneCard() {
+    public CardDto dealOneCard() {
         synchronized (lockDeck) {
-            //TODO
-            return null;
+            List<Card> cards =  deckDao.getAllCard();
+            Random rand = new Random();
+            Card randomCard = cards.get(rand.nextInt(cards.size()));
+            deckDao.removeCard(randomCard);
+            return new CardDto(randomCard);
         }
     }
 
