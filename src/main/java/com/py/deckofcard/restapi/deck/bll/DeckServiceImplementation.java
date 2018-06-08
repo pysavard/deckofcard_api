@@ -25,11 +25,25 @@ public class DeckServiceImplementation implements DeckService {
     public void shuffle(int deckId) {
         synchronized (lockDeck) {
             Deck deck = deckCollectionDao.getDeck(deckId);
-            deck.clearDeck();
-            for (int suitsValue = 1; suitsValue <= 4; suitsValue++) {
-                for (int cardsValue = 1; cardsValue <= 13; cardsValue++) {
-                    deck.addCard(Suits.valueOf(suitsValue), CardValue.getCardFromValue(cardsValue));
-                }
+            Random rand = new Random();
+            List<Card> cards = deck.getCards();
+            int deckSize = cards.size();
+
+            for ( int i = 0 ; i < deck.getCards().size(); i++)
+            {
+                Card currentCard = cards.get(i);
+                int randomPosition = rand.nextInt(deckSize - i);
+                cards.set(i, cards.get(randomPosition));
+                cards.set(randomPosition,currentCard );
+            }
+        }
+    }
+
+    public void createDeck(Deck deck){
+        deck.clearDeck();
+        for (int suitsValue = 1; suitsValue <= 4; suitsValue++) {
+            for (int cardsValue = 1; cardsValue <= 13; cardsValue++) {
+                deck.addCard(Suits.valueOf(suitsValue), CardValue.getCardFromValue(cardsValue));
             }
         }
     }
@@ -47,18 +61,9 @@ public class DeckServiceImplementation implements DeckService {
 
     private CardDto dealARandomCard(Deck deck, List<Card> cards)
     {
-        Random rand = new Random();
-        Card randomCard = cards.get(rand.nextInt(cards.size()));
-        removeCard(deck, randomCard);
+        Card randomCard = cards.get(0);
+        deck.getCards().remove(0);
         return new CardDto(randomCard);
-    }
-
-    private void removeCard(Deck deck, Card card){
-        if (!deck.getCards()
-                .removeIf(x -> x.getValue() == card.getValue() && x.getSuit() == card.getSuit()))
-        {
-            throw new RuntimeException("Card not present in deck");
-        }
     }
 
     @Override
@@ -70,6 +75,8 @@ public class DeckServiceImplementation implements DeckService {
 
     @Override
     public DeckDto createDeck() {
-        return new DeckDto(deckCollectionDao.createDeck());
+        Deck deck = deckCollectionDao.createDeck();
+        createDeck(deck);
+        return new DeckDto(deck);
     }
 }
