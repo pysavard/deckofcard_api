@@ -2,6 +2,7 @@ package com.py.deckofcard.restapi.deck.dao;
 
 import com.py.deckofcard.restapi.deck.entity.Card;
 import com.py.deckofcard.restapi.deck.entity.Deck;
+import com.py.deckofcard.restapi.deck.entity.enums.CardValue;
 import com.py.deckofcard.restapi.deck.entity.enums.Suits;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public class DeckDaoImplementation implements DeckDao{
     }
 
     @Override
-    public void addCard(Suits suit, int value) {
+    public void addCard(Suits suit, CardValue value) {
         deckOfCards.addCard(new Card(suit, value));
     }
 

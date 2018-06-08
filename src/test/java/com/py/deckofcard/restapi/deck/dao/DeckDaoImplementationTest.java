@@ -44,7 +44,7 @@ public class DeckDaoImplementationTest extends TestBase {
     public void addCardWithValue_ShouldAddACardToTheList(){
         Card expectedCard= fixture.create(Card.class);
 
-        sut.addCard(expectedCard.getSuit(), expectedCard.getValue());
+        sut.addCard(expectedCard.getSuit(), expectedCard.getCardValue());
 
         assertThat(sut.getAllCard().get(0).equalTo(expectedCard)).isTrue();
     }

@@ -4,6 +4,7 @@ import com.py.deckofcard.restapi.deck.dao.DeckDao;
 import com.py.deckofcard.restapi.deck.dto.CardDto;
 import com.py.deckofcard.restapi.deck.dto.DeckDto;
 import com.py.deckofcard.restapi.deck.entity.Card;
+import com.py.deckofcard.restapi.deck.entity.enums.CardValue;
 import com.py.deckofcard.restapi.deck.entity.enums.Suits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DeckServiceImplementation implements DeckService {
             deckDao.emptyDeck();
             for (int suitsValue = 1; suitsValue <= 4; suitsValue++) {
                 for (int cardsValue = 1; cardsValue <= 13; cardsValue++) {
-                    deckDao.addCard(Suits.valueOf(suitsValue), cardsValue);
+                    deckDao.addCard(Suits.valueOf(suitsValue), CardValue.getCardFromValue(cardsValue));
                 }
             }
         }
@@ -35,11 +36,17 @@ public class DeckServiceImplementation implements DeckService {
     public CardDto dealOneCard() {
         synchronized (lockDeck) {
             List<Card> cards =  deckDao.getAllCard();
-            Random rand = new Random();
-            Card randomCard = cards.get(rand.nextInt(cards.size()));
-            deckDao.removeCard(randomCard);
-            return new CardDto(randomCard);
+            if (cards.isEmpty()) return new CardDto();
+            return dealARandomCard(cards);
         }
+    }
+
+    private CardDto dealARandomCard(List<Card> cards)
+    {
+        Random rand = new Random();
+        Card randomCard = cards.get(rand.nextInt(cards.size()));
+        deckDao.removeCard(randomCard);
+        return new CardDto(randomCard);
     }
 
     @Override

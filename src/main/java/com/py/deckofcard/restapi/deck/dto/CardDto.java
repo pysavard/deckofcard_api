@@ -12,4 +12,11 @@ public class CardDto {
         this.value = card.getValue();
         this.name = card.getCardValue().getName() + " of " + suits;
     }
+
+    public CardDto()
+    {
+        this.suits = "";
+        this.name = "";
+        this.value = 0;
+    }
 }
