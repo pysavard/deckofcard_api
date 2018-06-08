@@ -14,5 +14,9 @@ public class Card {
     public int getValue(){ return value;}
     public Suits getSuit() {return suit;}
 
+    public boolean equalTo(Card card){
+        return ( value == card.getValue() && suit == card.getSuit());
+    }
+
 
 }

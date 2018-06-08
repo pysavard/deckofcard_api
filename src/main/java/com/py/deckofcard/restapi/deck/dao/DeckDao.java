@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface DeckDao {
 
-    void EmptyDeck();
-    void AddCard(Card card);
-    void AddCard(Suits suit, int value);
-    void RemoveCard(Card card);
-    List<Card> GetAll();
+    void emptyDeck();
+    void addCard(Card card);
+    void addCard(Suits suit, int value);
+    void removeCard(Card card);
+    List<Card> getAllCard();
 }
