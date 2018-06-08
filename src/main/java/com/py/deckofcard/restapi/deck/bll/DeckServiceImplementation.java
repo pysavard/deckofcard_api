@@ -1,6 +1,7 @@
 package com.py.deckofcard.restapi.deck.bll;
 
 import com.py.deckofcard.restapi.deck.dao.DeckDao;
+import com.py.deckofcard.restapi.deck.dto.DeckDto;
 import com.py.deckofcard.restapi.deck.entity.Card;
 import com.py.deckofcard.restapi.deck.entity.enums.Suits;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class DeckServiceImplementation implements DeckService {
             //TODO
             return null;
         }
+    }
+
+    @Override
+    public DeckDto getCardsInDeck() {
+        return new DeckDto(deckDao.getAllCard());
     }
 }
