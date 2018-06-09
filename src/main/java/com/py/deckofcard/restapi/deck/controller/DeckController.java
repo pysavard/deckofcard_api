@@ -6,11 +6,7 @@ import com.py.deckofcard.restapi.deck.dto.DeckDto;
 import com.py.deckofcard.restapi.deck.exception.NoContentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DeckController {
@@ -19,6 +15,7 @@ public class DeckController {
     private DeckService deckService;
 
     @PostMapping(value = "deck")
+    @ResponseStatus(HttpStatus.CREATED)
     public DeckDto createDeck() {
         return deckService.createDeck();
     }
