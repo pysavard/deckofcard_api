@@ -39,31 +39,19 @@ public class DeckServiceImplementation implements DeckService {
         }
     }
 
-    public void createDeck(Deck deck){
-        deck.clearDeck();
-        for (int suitsValue = 1; suitsValue <= 4; suitsValue++) {
-            for (int cardsValue = 1; cardsValue <= 13; cardsValue++) {
-                deck.addCard(Suits.valueOf(suitsValue), CardValue.getCardFromValue(cardsValue));
-            }
-        }
-    }
-
     @Override
     public CardDto dealOneCard(int deckId) {
         synchronized (lockDeck) {
             Deck deck = deckCollectionDao.getDeck(deckId);
 
             List<Card> cards =  deck.getCards();
-            if (cards.isEmpty()) return new CardDto();
-            return dealARandomCard(deck, cards);
-        }
-    }
 
-    private CardDto dealARandomCard(Deck deck, List<Card> cards)
-    {
-        Card randomCard = cards.get(0);
-        deck.getCards().remove(0);
-        return new CardDto(randomCard);
+            if (cards.isEmpty()) return null;
+
+            Card randomCard = cards.get(0);
+            deck.getCards().remove(0);
+            return new CardDto(randomCard);
+        }
     }
 
     @Override
@@ -76,7 +64,12 @@ public class DeckServiceImplementation implements DeckService {
     @Override
     public DeckDto createDeck() {
         Deck deck = deckCollectionDao.createDeck();
-        createDeck(deck);
+        deck.clearDeck();
+        for (int suitsValue = 1; suitsValue <= 4; suitsValue++) {
+            for (int cardsValue = 1; cardsValue <= 13; cardsValue++) {
+                deck.addCard(Suits.valueOf(suitsValue), CardValue.getCardFromValue(cardsValue));
+            }
+        }
         return new DeckDto(deck);
     }
 }

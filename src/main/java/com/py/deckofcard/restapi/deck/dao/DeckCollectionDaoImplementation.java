@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Repository
 public class DeckCollectionDaoImplementation  implements DeckCollectionDao{
-    //TODO : Again, in memory db would be great
+    //TODO : Upgrade static variable to memory database in v2
     private static Map<Integer, Deck> decks = new HashMap<>();
     private static int currentId = 1;
 
