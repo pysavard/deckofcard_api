@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -23,23 +26,52 @@ public class DeckServiceImplementationTest extends TestBase {
     private DeckServiceImplementation sut;
 
     @Test
-    public void shuffle_shouldEmptyDeckBeforeCreateNew() {
-        Deck deck = mock(Deck.class);
+    public void shuffle_shouldChangeCardOrderInDeck(){
+        Deck deck = fixture.create(Deck.class);
         when(deckDao.getDeck(1)).thenReturn(deck);
+        deck.addCard(fixture.create(Card.class));
+        deck.addCard(fixture.create(Card.class));
+        deck.addCard(fixture.create(Card.class));
+        List<Card> beforeShuffle = (List<Card>)((ArrayList<Card>)deck.getCards()).clone();
 
         sut.shuffle(1);
+
+        assertThat(deck.getCards())
+                .doesNotContainSequence(beforeShuffle);
+    }
+
+    @Test
+    public void createDeck_shouldClearDeck(){
+        Deck deck = mock(Deck.class);
+        when(deckDao.createDeck()).thenReturn(deck);
+
+        sut.createDeck();
 
         verify(deck).clearDeck();
     }
 
     @Test
-    public void shuffle_shouldCreateADeckOf52Cards() {
+    public void createDeck_shouldCreateDeckWith52Card(){
         Deck deck = mock(Deck.class);
-        when(deckDao.getDeck(1)).thenReturn(deck);
+        when(deckDao.createDeck()).thenReturn(deck);
 
-        sut.shuffle(1);
+        sut.createDeck();
 
         verify(deck, times(52)).addCard(any(), any());
+    }
+
+    @Test
+    public void createDeck_shouldCreateNewDeckWithAllUniqueCard(){
+        Deck deck = fixture.create(Deck.class);
+        when(deckDao.createDeck()).thenReturn(deck);
+
+        sut.createDeck();
+
+        Map<Integer, List<Card>> groupCard = deck.getCards()
+                .stream()
+                .collect(Collectors.groupingBy(x -> x.getValue() + (x.getSuit().getValue() * 100)));
+        assertThat(groupCard.values())
+                .allSatisfy(x -> assertThat(x.size()).isEqualTo(1));
     }
 
     @Test
@@ -58,7 +90,6 @@ public class DeckServiceImplementationTest extends TestBase {
         CardDto result = sut.dealOneCard(1);
 
         assertThat(card1.equalTo(result) || card2.equalTo(result)).isTrue();
-
     }
 
     @Test
@@ -75,12 +106,11 @@ public class DeckServiceImplementationTest extends TestBase {
     }
 
     @Test
-    public void dealOneCard_whenDeckEmpty_shouldReturnEmptyCard() {
-        CardDto emptyCard = new CardDto();
+    public void dealOneCard_whenDeckEmpty_shouldReturnNull() {
         Deck deck = new Deck(1);
         when(deckDao.getDeck(1)).thenReturn(deck);
         CardDto result = sut.dealOneCard(1);
 
-        assertThat(result).isEqualToComparingFieldByField(emptyCard);
+        assertThat(result).isNull();
     }
 }
