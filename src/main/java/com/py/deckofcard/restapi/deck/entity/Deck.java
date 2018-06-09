@@ -25,4 +25,6 @@ public class Deck {
     public int getId() { return id;}
     public List<Card> getCards() { return cards; }
     public void clearDeck(){ cards = new ArrayList<>();}
+
+    public boolean isEmpty() {return this.cards.isEmpty();}
 }

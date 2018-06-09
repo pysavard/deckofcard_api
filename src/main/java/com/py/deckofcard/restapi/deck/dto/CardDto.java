@@ -4,18 +4,18 @@ import com.py.deckofcard.restapi.deck.entity.Card;
 
 public class CardDto {
     public String name;
-    public String suits;
+    public String suit;
     public int value;
 
     public CardDto(Card card){
-        this.suits = card.getSuit().getName();
+        this.suit = card.getSuit().getName();
         this.value = card.getValue();
-        this.name = card.getCardValue().getName() + " of " + suits;
+        this.name = card.getCardValue().getName() + " of " + suit;
     }
 
     public CardDto()
     {
-        this.suits = "";
+        this.suit = "";
         this.name = "";
         this.value = 0;
     }
